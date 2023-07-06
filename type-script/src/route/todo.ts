@@ -6,11 +6,14 @@ let todos:Todo[]=[];
 
 const router = Router();
 
+type requestBody={text:string}
+
 router.get('/',(req,res,next)=>{
     res.status(200).json({todos:todos})
 });
 
 router.post('/todo',(req,res,next)=>{
+    const reqBody=req.body as requestBody;
     const newTodo:Todo={
         id:new Date().toString(),
         text:req.body.text
@@ -26,11 +29,12 @@ router.delete('/todo/:todoId',(req,res,next)=>{
 
 router.put('/todo/:todoId',(req,res,next)=>{
     const tid=req.params.todoId;
+    const body=req.body as requestBody;
     const todoIndex=todos.findIndex(todoItem=>todoItem.id===tid);
     if(todoIndex>=0){
         todos[todoIndex]={
             id:tid,
-            text:req.body.text
+            text:body.text
         }
         return res.status(200).json({message:'update todo'})
     }
